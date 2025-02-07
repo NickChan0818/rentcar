@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+
+  rentcar-service:
+    build:
+      context: .
+      dockerfile: ./docker/rentcar/Dockerfile
+    container_name: rentcar-service
+    depends_on:
+      rentcar-postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+
+  rentcar-postgres:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    container_name: rentcar-postgres
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${db_user}
+      POSTGRES_PASSWORD: ${db_password}
+      POSTGRES_DB: ${db_name}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${db_user} -d ${db_name}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgweb:
+    container_name: pgweb
+    restart: always
+    image: sosedoff/pgweb
+    ports:
+      - "8081:8081"
+    links:
+      - rentcar-postgres:postgres
+    environment:
+      - DATABASE_URL=postgres://admin:admin@rentcar-postgres:${db_port}/${db_name}?sslmode=disable
+    depends_on:
+      rentcar-postgres:
+        condition: service_healthy
+
+volumes:
+  dbdata:
