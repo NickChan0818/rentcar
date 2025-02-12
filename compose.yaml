@@ -12,6 +12,11 @@ services:
         condition: service_healthy
     ports:
       - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - rentcar-network
 
   rentcar-postgres:
     image: postgres
@@ -21,14 +26,16 @@ services:
     volumes:
       - dbdata:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: ${db_user}
-      POSTGRES_PASSWORD: ${db_password}
-      POSTGRES_DB: ${db_name}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${db_user} -d ${db_name}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - rentcar-network
 
   pgweb:
     container_name: pgweb
@@ -39,10 +46,16 @@ services:
     links:
       - rentcar-postgres:postgres
     environment:
-      - DATABASE_URL=postgres://admin:admin@rentcar-postgres:${db_port}/${db_name}?sslmode=disable
+      - DATABASE_URL=postgres://admin:admin@rentcar-postgres:${DB_PORT}/${DB_NAME}?sslmode=disable
     depends_on:
       rentcar-postgres:
         condition: service_healthy
+    networks:
+      - rentcar-network
+
+networks:
+  rentcar-network:
+
 
 volumes:
   dbdata:

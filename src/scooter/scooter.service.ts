@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateScooterDto } from './dto/create-scooter.dto';
-import { UpdateScooterDto } from './dto/update-scooter.dto';
+import { CreateScooterDto, UpdateScooterDto } from './dto/scooter.dto';
 
 @Injectable()
 export class ScooterService {
