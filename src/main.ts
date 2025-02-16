@@ -12,6 +12,7 @@ async function bootstrap() {
   const dataSource = app.get<DataSource>(getDataSourceToken());
   if (dataSource.isInitialized) {
     console.log('Database connection established successfully');
+    console.log('pgweb: http://localhost:8081');
   } else {
     console.error('Failed to connect to the database');
   }
