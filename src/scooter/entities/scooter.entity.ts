@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Rent } from '../../rent/entities/rent.entity';
 
 @Entity()
 export class Scooter {
@@ -7,4 +8,7 @@ export class Scooter {
 
   @Column({ default: false })
   isRentting: boolean;
+
+  @OneToMany(() => Rent, (rent) => rent.scooter)
+  rents: Rent[];
 }

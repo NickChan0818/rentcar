@@ -23,7 +23,7 @@ export class Rent {
   @ManyToOne(() => User)
   user: User;
 
-  @ManyToOne(() => Scooter)
+  @ManyToOne(() => Scooter, (scooter) => scooter.rents)
   scooter: Scooter;
 
   @CreateDateColumn()

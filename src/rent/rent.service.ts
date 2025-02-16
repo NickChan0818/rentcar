@@ -1,26 +1,82 @@
-import { Injectable } from '@nestjs/common';
-import { CreateRentDto } from './dto/create-rent.dto';
-import { UpdateRentDto } from './dto/update-rent.dto';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateRentDto } from './dto/rent.dto';
+import { Rent } from './entities/rent.entity';
+import { Scooter } from '../scooter/entities/scooter.entity';
 
 @Injectable()
 export class RentService {
-  create(createRentDto: CreateRentDto) {
-    return `This action adds a new rent ${JSON.stringify(createRentDto)}`;
+  constructor(
+    @InjectRepository(Rent)
+    private readonly rentRepository: Repository<Rent>,
+    @InjectRepository(Scooter)
+    private readonly scooterRepository: Repository<Scooter>,
+  ) {}
+
+  async create(createRentDto: CreateRentDto): Promise<Rent> {
+    const scooter = await this.scooterRepository.findOne({
+      where: { id: createRentDto.scooterId },
+    });
+    // TODO: Check user is not renting more than 1 scooter
+
+    if (!scooter) {
+      throw new BadRequestException(
+        `Scooter with id ${createRentDto.scooterId} not found`,
+      );
+    }
+    if (scooter.isRentting === true) {
+      throw new BadRequestException(
+        `Scooter with id ${createRentDto.scooterId} is already renting`,
+      );
+    }
+
+    const rent = this.rentRepository.create({
+      ...createRentDto,
+      scooter,
+      startTime: new Date(),
+    });
+
+    return this.rentRepository.save(rent);
   }
 
-  findAll() {
-    return `This action returns all rent`;
+  async findAll(): Promise<Rent[]> {
+    return this.rentRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} rent`;
+  async findOne(id: number): Promise<Rent> {
+    const rent = await this.rentRepository.findOne({ where: { id } });
+    if (!rent) {
+      throw new NotFoundException(`Rent with id ${id} not found`);
+    }
+    return rent;
   }
 
-  update(id: number, updateRentDto: UpdateRentDto) {
-    return `This action updates a #${id}, ${JSON.stringify(updateRentDto)} rent`;
-  }
+  async closeRent(id: number): Promise<Rent> {
+    const rent = await this.rentRepository.findOne({ where: { id } });
+    if (!rent) {
+      throw new NotFoundException(`Rent with id ${id} not found`);
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} rent`;
+    const scooter = await this.scooterRepository.findOne({
+      where: { id: rent.scooter.id },
+    });
+    if (!scooter) {
+      throw new InternalServerErrorException(`Scooter with id ${id} not found`);
+    }
+    if (scooter.isRentting === false) {
+      throw new BadRequestException(`Scooter with id ${id} is not renting`);
+    }
+
+    scooter.isRentting = false;
+    await this.scooterRepository.save(scooter);
+
+    rent.endTime = new Date();
+    return this.rentRepository.save({ ...rent });
   }
 }

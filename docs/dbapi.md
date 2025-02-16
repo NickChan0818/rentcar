@@ -31,7 +31,7 @@
 - **Request Body:**
   - `{name: string, birthday: date, phone?: number, email: string}`
 - **Responses:**
-  - `204`: user
+  - `200`: user
   - `400`: badRequest
 
 #### Update User
@@ -39,7 +39,7 @@
 - **Request Parameters:**
   - `id` (string)
 - **Responses:**
-  - `204`: user
+  - `200`: user
   - `400`: badRequest
   - `403`: forbidden
   - `404`: notFound
@@ -59,7 +59,7 @@
 - **Request Body:**
   - `{email: string, password: string}`
 - **Responses:**
-  - `200`: `{token: string}`
+  - `200`: token
   - `400`: badRequest, authFailed
 
 ## Scooters
@@ -123,14 +123,14 @@
 - **Request Body:**
   - `{scooterId: number}`
 - **Responses:**
-  - `204`: rent
+  - `200`: rent
   - `400`: badRequest, notFoundScooterId, userIsRentting, scooterIsRentting
 
 #### Close Rent
-- **Path:** `PATCH /closeRent/:id`
+- **Path:** `POST /closeRent/:id`
 - **Request Parameters:**
   - `id` (string, required)
 - **Responses:**
-  - `204`: rent
+  - `200`: rent
   - `400`: badRequest, rentClosed
   - `404`: notFound
