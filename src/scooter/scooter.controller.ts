@@ -8,8 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ScooterService } from './scooter.service';
-import { CreateScooterDto } from './dto/create-scooter.dto';
-import { UpdateScooterDto } from './dto/update-scooter.dto';
+import { CreateScooterDto, UpdateScooterDto } from './dto/scooter.dto';
 
 @Controller('scooter')
 export class ScooterController {
