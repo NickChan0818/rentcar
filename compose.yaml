@@ -52,6 +52,8 @@ services:
         condition: service_healthy
     networks:
       - rentcar-network
+    volumes:
+      - pgweb:/app
 
 networks:
   rentcar-network:
@@ -60,3 +62,4 @@ networks:
 volumes:
   rencarservice:
   dbdata:
+  pgweb:
