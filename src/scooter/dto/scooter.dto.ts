@@ -1,3 +1,3 @@
 export class CreateScooterDto {
-  isRentting?: boolean;
+  isRenting?: boolean;
 }

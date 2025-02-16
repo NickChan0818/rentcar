@@ -7,7 +7,7 @@ export class Scooter {
   id: number;
 
   @Column({ default: false })
-  isRentting: boolean;
+  isRenting: boolean;
 
   @OneToMany(() => Rent, (rent) => rent.scooter)
   rents: Rent[];

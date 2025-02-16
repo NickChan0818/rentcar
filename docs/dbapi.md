@@ -69,7 +69,7 @@
 | Field      | Type     | Constraints          |
 |------------|----------|----------------------|
 | id         | number   | pk, auto             |
-| isRentting | boolean  | default: false       |
+| isRenting | boolean  | default: false       |
 
 ### API
 
@@ -84,7 +84,7 @@
 #### Get All Scooters
 - **Path:** `GET /`
 - **Request Query:**
-  - `{isRentting?: boolean}`
+  - `{isRenting?: boolean}`
 - **Responses:**
   - `200`: scooter[]
 
@@ -124,7 +124,7 @@
   - `{scooterId: number}`
 - **Responses:**
   - `200`: rent
-  - `400`: badRequest, notFoundScooterId, userIsRentting, scooterIsRentting
+  - `400`: badRequest, notFoundScooterId, userIsRenting, scooterIsRenting
 
 #### Close Rent
 - **Path:** `POST /closeRent/:id`

@@ -30,7 +30,7 @@ export class RentService {
         `Scooter with id ${createRentDto.scooterId} not found`,
       );
     }
-    if (scooter.isRentting === true) {
+    if (scooter.isRenting === true) {
       throw new BadRequestException(
         `Scooter with id ${createRentDto.scooterId} is already renting`,
       );
@@ -69,11 +69,11 @@ export class RentService {
     if (!scooter) {
       throw new InternalServerErrorException(`Scooter with id ${id} not found`);
     }
-    if (scooter.isRentting === false) {
+    if (scooter.isRenting === false) {
       throw new BadRequestException(`Scooter with id ${id} is not renting`);
     }
 
-    scooter.isRentting = false;
+    scooter.isRenting = false;
     await this.scooterRepository.save(scooter);
 
     rent.endTime = new Date();

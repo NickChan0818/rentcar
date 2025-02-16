@@ -16,9 +16,9 @@ export class ScooterService {
     return this.scooterRepository.save(scooter);
   }
 
-  async findAll(isRentting?: boolean): Promise<Scooter[]> {
-    if (isRentting !== undefined) {
-      return this.scooterRepository.find({ where: { isRentting } });
+  async findAll(isRenting?: boolean): Promise<Scooter[]> {
+    if (isRenting !== undefined) {
+      return this.scooterRepository.find({ where: { isRenting } });
     }
     return this.scooterRepository.find();
   }

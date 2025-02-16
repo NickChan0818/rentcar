@@ -12,8 +12,8 @@ export class ScooterController {
   }
 
   @Get()
-  findAll(@Query('isRentting') isRentting?: boolean) {
-    return this.scooterService.findAll(isRentting);
+  findAll(@Query('isRenting') isRenting?: boolean) {
+    return this.scooterService.findAll(isRenting);
   }
 
   @Get(':id')
