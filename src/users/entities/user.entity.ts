@@ -31,4 +31,7 @@ export class User {
 
   @Column({ default: false })
   isVoid: boolean;
+
+  @Column({ length: 512 })
+  password: string;
 }

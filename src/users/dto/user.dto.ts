@@ -3,6 +3,7 @@ export class CreateUserDto {
   birthday: Date;
   phone?: string;
   email: string;
+  password: string;
 }
 
 export class UpdateUserDto {

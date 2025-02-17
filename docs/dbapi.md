@@ -29,7 +29,7 @@
 #### Create User
 - **Path:** `POST /users`
 - **Request Body:**
-  - `{name: string, birthday: date, phone?: string, email: string}`
+  - `{name: string, birthday: date, phone?: string, email: string, password: string}`
 - **Responses:**
   - `200`: user
   - `400`: badRequest
@@ -55,7 +55,7 @@
   - `404`: notFound
 
 #### Login
-- **Path:** `POST /users/login`
+- **Path:** `POST /auth/login`
 - **Request Body:**
   - `{email: string, password: string}`
 - **Responses:**

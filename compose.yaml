@@ -12,10 +12,6 @@ services:
         condition: service_healthy
     ports:
       - "3000:3000"
-    # volumes:
-      # - rencarservice:/usr/src/app
-      # - .:/usr/src/app
-      # - /usr/src/app/node_modules
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -56,13 +52,9 @@ services:
         condition: service_healthy
     networks:
       - rentcar-network
-    # volumes:
-    #   - pgweb:/app
 
 networks:
   rentcar-network:
 
-
 volumes:
-  # rencarservice:
-  dbdata: # pgweb:
+  dbdata:

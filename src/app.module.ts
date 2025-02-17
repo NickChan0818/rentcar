@@ -7,10 +7,11 @@ import { ScooterModule } from './scooter/scooter.module';
 import { User } from './users/entities/user.entity';
 import { Scooter } from './scooter/entities/scooter.entity';
 import { Rent } from './rent/entities/rent.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -28,6 +29,7 @@ import { Rent } from './rent/entities/rent.entity';
     UsersModule,
     RentModule,
     ScooterModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
