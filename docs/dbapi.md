@@ -18,7 +18,7 @@
 ### API
 
 #### Get User by ID
-- **Path:** `GET /:id`
+- **Path:** `GET /users/:id`
 - **Request Parameters:**
   - `id` (string, required)
 - **Responses:**
@@ -27,7 +27,7 @@
   - `403`: forbidden
 
 #### Create User
-- **Path:** `POST /`
+- **Path:** `POST /users`
 - **Request Body:**
   - `{name: string, birthday: date, phone?: string, email: string}`
 - **Responses:**
@@ -35,7 +35,7 @@
   - `400`: badRequest
 
 #### Update User
-- **Path:** `PATCH /:id`
+- **Path:** `PATCH /users/:id`
 - **Request Parameters:**
   - `id` (string)
 - **Responses:**
@@ -45,7 +45,7 @@
   - `404`: notFound
 
 #### Delete User
-- **Path:** `DELETE /:id`
+- **Path:** `DELETE /users/:id`
 - **Request Parameters:**
   - `id`
 - **Responses:**
@@ -55,7 +55,7 @@
   - `404`: notFound
 
 #### Login
-- **Path:** `POST /login`
+- **Path:** `POST /users/login`
 - **Request Body:**
   - `{email: string, password: string}`
 - **Responses:**
@@ -74,7 +74,7 @@
 ### API
 
 #### Get Scooter by ID
-- **Path:** `GET /:id`
+- **Path:** `GET /scooter/:id`
 - **Request Parameters:**
   - `id` (string, required)
 - **Responses:**
@@ -82,7 +82,7 @@
   - `404`: notFound
 
 #### Get All Scooters
-- **Path:** `GET /`
+- **Path:** `GET /scooter`
 - **Request Query:**
   - `{isRenting?: boolean}`
 - **Responses:**
@@ -105,7 +105,7 @@
 ### API
 
 #### Get Rent by ID
-- **Path:** `GET /:id`
+- **Path:** `GET /rent/:id`
 - **Request Parameters:**
   - `id` (string, required)
 - **Responses:**
@@ -114,12 +114,12 @@
   - `404`: notFound
 
 #### Get All Rents
-- **Path:** `GET /`
+- **Path:** `GET /rent`
 - **Responses:**
   - `200`: rent[] (self-data)
 
 #### Create Rent
-- **Path:** `POST /`
+- **Path:** `POST /rent`
 - **Request Body:**
   - `{scooterId: number}`
 - **Responses:**
@@ -127,7 +127,7 @@
   - `400`: badRequest, notFoundScooterId, userIsRenting, scooterIsRenting
 
 #### Close Rent
-- **Path:** `POST /closeRent/:id`
+- **Path:** `POST /rent/closeRent/:id`
 - **Request Parameters:**
   - `id` (string, required)
 - **Responses:**
