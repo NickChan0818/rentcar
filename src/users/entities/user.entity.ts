@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Rent } from 'src/rent/entities/rent.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
@@ -28,4 +29,7 @@ export class User {
 
   @Column({ length: 512 })
   password: string;
+
+  @OneToMany(() => Rent, (rent) => rent.user)
+  rents: Rent[];
 }

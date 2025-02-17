@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Request } from '@nestjs/common';
 import { RentService } from './rent.service';
 import { CreateRentDto } from './dto/rent.dto';
 import { validateId } from 'src/utils/utils';
@@ -8,8 +8,8 @@ export class RentController {
   constructor(private readonly rentService: RentService) {}
 
   @Post()
-  create(@Body() createRentDto: CreateRentDto) {
-    return this.rentService.create(createRentDto);
+  create(@Body() createRentDto: CreateRentDto, @Request() req: { user: { userId: number } }) {
+    return this.rentService.create(createRentDto, req.user.userId);
   }
 
   @Get()
@@ -19,13 +19,13 @@ export class RentController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    const scooterId = validateId(id);
-    return this.rentService.findOne(scooterId);
+    const rentId = validateId(id);
+    return this.rentService.findOne(rentId);
   }
 
-  @Post(':id')
+  @Post('/closeRent/:id')
   closeRent(@Param('id') id: string) {
-    const scooterId = validateId(id);
-    return this.rentService.closeRent(scooterId);
+    const rentId = validateId(id);
+    return this.rentService.closeRent(rentId);
   }
 }

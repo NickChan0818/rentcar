@@ -1,14 +1,10 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateRentDto } from './dto/rent.dto';
 import { Rent } from './entities/rent.entity';
 import { Scooter } from '../scooter/entities/scooter.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class RentService {
@@ -17,32 +13,40 @@ export class RentService {
     private readonly rentRepository: Repository<Rent>,
     @InjectRepository(Scooter)
     private readonly scooterRepository: Repository<Scooter>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createRentDto: CreateRentDto): Promise<Rent> {
+  async create(createRentDto: CreateRentDto, userId: number): Promise<Rent> {
     const scooter = await this.scooterRepository.findOne({
       where: { id: createRentDto.scooterId },
     });
-    // TODO: Check user is not renting more than 1 scooter
-
     if (!scooter) {
-      throw new BadRequestException(
-        `Scooter with id ${createRentDto.scooterId} not found`,
-      );
+      throw new BadRequestException(`Scooter with id ${createRentDto.scooterId} not found`);
     }
     if (scooter.isRenting === true) {
-      throw new BadRequestException(
-        `Scooter with id ${createRentDto.scooterId} is already renting`,
-      );
+      throw new BadRequestException(`Scooter with id ${createRentDto.scooterId} is already renting`);
     }
 
+    // Check user is not renting more than 1 scooter
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['rents'],
+    });
+    if (!user) throw new BadRequestException(`User with id ${userId} not found`);
+    const isRenting = user.rents.some((rent) => rent.endTime === null);
+    if (isRenting) throw new BadRequestException(`User with id ${userId} is already renting a scooter`);
+
     const rent = this.rentRepository.create({
-      ...createRentDto,
       scooter,
+      user,
       startTime: new Date(),
     });
+    scooter.isRenting = true;
+    await this.scooterRepository.save(scooter);
+    const savedRent = await this.rentRepository.save(rent);
 
-    return this.rentRepository.save(rent);
+    return savedRent;
   }
 
   async findAll(): Promise<Rent[]> {
@@ -58,25 +62,16 @@ export class RentService {
   }
 
   async closeRent(id: number): Promise<Rent> {
-    const rent = await this.rentRepository.findOne({ where: { id } });
+    const rent = await this.rentRepository.findOne({ where: { id }, relations: ['scooter'] });
     if (!rent) {
       throw new NotFoundException(`Rent with id ${id} not found`);
     }
-
-    const scooter = await this.scooterRepository.findOne({
-      where: { id: rent.scooter.id },
-    });
-    if (!scooter) {
-      throw new InternalServerErrorException(`Scooter with id ${id} not found`);
-    }
-    if (scooter.isRenting === false) {
-      throw new BadRequestException(`Scooter with id ${id} is not renting`);
-    }
-
+    const scooter = rent.scooter;
     scooter.isRenting = false;
     await this.scooterRepository.save(scooter);
 
     rent.endTime = new Date();
-    return this.rentRepository.save({ ...rent });
+    const updatedRent = await this.rentRepository.save(rent);
+    return updatedRent;
   }
 }
