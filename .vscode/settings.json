@@ -2,5 +2,5 @@
     "cSpell.words": [
         "rentcar"
     ],
-    "makefile.configureOnOpen": false
+    "postman.settings.dotenv-detection-notification-visibility": false
 }
