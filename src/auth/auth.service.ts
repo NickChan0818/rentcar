@@ -13,7 +13,8 @@ export class AuthService {
     const result = await this.usersService.comparePassword(email, password);
     if (!result.isCompare) throw new UnauthorizedException();
 
-    const payload = { sub: result.userId }; // Assuming the correct property is 'id'
+    const payload = { userId: result.userId };
+
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

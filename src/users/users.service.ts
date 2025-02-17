@@ -19,7 +19,8 @@ export class UsersService {
     const hashedPassword = await bcrypt.hash(createUserDto.password, saltRounds);
     createUserDto.password = hashedPassword;
     const user = this.userRepository.create(createUserDto);
-    return this.userRepository.save(user);
+    const savedUser = this.userRepository.save(user);
+    return savedUser;
   }
 
   async findAll(): Promise<User[]> {
