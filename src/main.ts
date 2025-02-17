@@ -1,10 +1,13 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DataSource } from 'typeorm';
 import { getDataSourceToken } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from './auth/auth.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalGuards(new AuthGuard(app.get(JwtService), app.get(Reflector)));
   await app.listen(process.env.PORT ?? 3000);
   console.log('Server is running on: http://localhost:3000');
 
