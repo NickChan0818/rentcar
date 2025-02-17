@@ -1,23 +1,15 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Request } from '@nestjs/common';
 import { RentService } from './rent.service';
-import { CreateRentDto } from './dto/create-rent.dto';
-import { UpdateRentDto } from './dto/update-rent.dto';
+import { CreateRentDto } from './dto/rent.dto';
+import { validateId } from 'src/utils/utils';
 
 @Controller('rent')
 export class RentController {
   constructor(private readonly rentService: RentService) {}
 
   @Post()
-  create(@Body() createRentDto: CreateRentDto) {
-    return this.rentService.create(createRentDto);
+  create(@Body() createRentDto: CreateRentDto, @Request() req: { user: { userId: number } }) {
+    return this.rentService.create(createRentDto, req.user.userId);
   }
 
   @Get()
@@ -27,16 +19,13 @@ export class RentController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.rentService.findOne(+id);
+    const rentId = validateId(id);
+    return this.rentService.findOne(rentId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRentDto: UpdateRentDto) {
-    return this.rentService.update(+id, updateRentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.rentService.remove(+id);
+  @Post('/closeRent/:id')
+  closeRent(@Param('id') id: string) {
+    const rentId = validateId(id);
+    return this.rentService.closeRent(rentId);
   }
 }

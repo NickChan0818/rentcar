@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
         "rentcar"
-    ]
+    ],
+    "postman.settings.dotenv-detection-notification-visibility": false
 }

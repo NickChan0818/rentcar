@@ -1,14 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { ScooterService } from './scooter.service';
-import { CreateScooterDto, UpdateScooterDto } from './dto/scooter.dto';
+import { CreateScooterDto } from './dto/scooter.dto';
+import { validateId } from 'src/utils/utils';
 
 @Controller('scooter')
 export class ScooterController {
@@ -20,22 +13,13 @@ export class ScooterController {
   }
 
   @Get()
-  findAll() {
-    return this.scooterService.findAll();
+  findAll(@Query('isRenting') isRenting?: boolean) {
+    return this.scooterService.findAll(isRenting);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.scooterService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateScooterDto: UpdateScooterDto) {
-    return this.scooterService.update(+id, updateScooterDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.scooterService.remove(+id);
+    const scooterId = validateId(id);
+    return this.scooterService.findOne(scooterId);
   }
 }

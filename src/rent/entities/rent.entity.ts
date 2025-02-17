@@ -1,11 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Scooter } from '../../scooter/entities/scooter.entity';
 
@@ -23,7 +16,7 @@ export class Rent {
   @ManyToOne(() => User)
   user: User;
 
-  @ManyToOne(() => Scooter)
+  @ManyToOne(() => Scooter, (scooter) => scooter.rents)
   scooter: Scooter;
 
   @CreateDateColumn()
