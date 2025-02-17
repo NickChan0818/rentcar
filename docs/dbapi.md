@@ -29,7 +29,7 @@
 #### Create User
 - **Path:** `POST /`
 - **Request Body:**
-  - `{name: string, birthday: date, phone?: number, email: string}`
+  - `{name: string, birthday: date, phone?: string, email: string}`
 - **Responses:**
   - `200`: user
   - `400`: badRequest

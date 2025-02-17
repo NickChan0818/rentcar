@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { validateId } from 'src/utils/utils';
 
 @Controller('users')
 export class UsersController {
@@ -21,22 +22,24 @@ export class UsersController {
 
   @Get()
   findAll() {
-    console.log('findAll');
     return this.usersService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    const userId = validateId(id);
+    return this.usersService.findOne(userId);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    const userId = validateId(id);
+    return this.usersService.update(userId, updateUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    const userId = validateId(id);
+    return this.usersService.remove(userId);
   }
 }
